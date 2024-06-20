@@ -1,0 +1,44 @@
+[project]
+name = "curso_fastapi_dunossauro"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [{ name = "Cauã Chagas", email = "caua.santos.dev@gmail.com" }]
+dependencies = ["fastapi-slim>=0.111.0", "uvicorn[standard]>=0.30.1"]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = { text = "MIT" }
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.2",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.4.9",
+    "httpx>=0.27.0",
+    "fastapi-cli>=0.0.4",
+]
+[tool.pdm]
+distribution = false
+
+[tool.ruff]
+line-length = 80
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+
+[tool.pytest.ini_options]
+pythonpath = "./src"
+addopts = '-p no:warnings'
+
+[tool.pdm.scripts]
+lint = 'ruff check . && ruff check . --diff'
+format = { composite = ['ruff check . --fix', 'ruff format .'] }
+server = 'fastapi dev src/curso_fastapi_dunossauro/app.py'
+pre_test = { composite = ['lint'] }
+test = 'pytest -s -x --cov=curso_fastapi_dunossauro -vv'
+post_test = 'coverage html'
